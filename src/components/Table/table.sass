@@ -1,0 +1,46 @@
+.editable
+    &:hover
+        cursor: pointer
+        border: 2px solid #007bff !important
+        transition: border ease-in-out 0.2s
+
+.hasHint
+    &:hover
+        cursor: help
+        border: 2px solid #007bff !important
+        transition: border ease-in-out 0.2s
+
+.table
+    border: 1px solid #575b61
+    thead
+        text-align: center
+    tr
+        .textcell
+            padding: 0.5rem 2.5rem
+            text-align: center
+
+        .iconcell
+            padding: 0rem 0.5rem
+            border-right: 1px solid gray
+            font-size: 1.6rem
+
+    .popup, .i-popup
+        font-size: 0.8rem
+        font-weight: 600
+        padding: 0.5rem
+        margin: 0.5rem 0rem
+        text-align: center
+        border: 2px solid #007bff
+        border-radius: 0.3rem
+        background-color: #fff
+        position: absolute
+        opacity: 1
+
+    .popup
+        transform: translate(calc( 5% - 2.8rem ), 0.1rem)
+
+    .i-popup
+        transform: translate(calc( 5% - 5.8rem ), 0.1rem)
+
+        .hinttext
+            margin-left: 0.3rem
