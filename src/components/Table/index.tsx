@@ -57,7 +57,6 @@ const TableRow = ({row}: any) => {
 }
 
 const TableCell = ({cellvalue} : any) => {
-
     const [value, setValue] = useState(cellvalue);
     const [showHint, setShowHint] = useState(false);
     const [enableEdit, setEnableEdit] = useState(false);
@@ -67,7 +66,7 @@ const TableCell = ({cellvalue} : any) => {
         setEnableEdit(true);
     }
 
-    const updateCellValue = (e: any) => {
+    const updateCellValue = (e: React.KeyboardEvent<HTMLElement>) => {
         if(e.key === 'Enter'){
             if(value?.label.trim().length === 0){
                 toast.dismiss();
@@ -94,7 +93,7 @@ const TableCell = ({cellvalue} : any) => {
         })
     } 
 
-    const updateShowHint = (e: any, ctype: string) => {
+    const updateShowHint = (e: React.MouseEvent<HTMLElement>, ctype: string) => {
         setShowHint(ctype === 'popup' ? false : true);
         setHighlight(ctype === 'icon' && !showHint ? true : false);
     }
@@ -103,22 +102,37 @@ const TableCell = ({cellvalue} : any) => {
         e.stopPropagation();
     }
 
+    const Popup = ({hint, supportsIcon, updateShowHint} : any) => {
+        return (
+            <div className={classNames(supportsIcon ? "ipopup d-flex align-items-center justify-content-center" : "popup")} 
+                onClick={(e) => { updateShowHint(); stopProp(e); }}
+            >
+                {
+                    supportsIcon && <i className="bi bi-exclamation-diamond-fill"></i>
+                }
+                <span className={classNames(value?.icon ? "hinttext" : "")}>
+                    {hint}
+                </span>                        
+            </div>
+        )
+    }
+
     const Cell = () => {
         return (
             <td 
                 className={classNames((value?.editable && !enableEdit) ? "editable" : "", value?.hint ? "hasHint" : "", "textcell")}
                 onClick={(e) => {value?.hint ? updateShowHint(e, 'text') : stopProp(e)}}
                 onDoubleClick={(e) => {value?.editable ? enableCellEdit() : stopProp(e)}}
+                onTouchEnd={(e) => {value?.editable ? enableCellEdit() : stopProp(e)}}
             >
                 {!enableEdit && value?.label}
                 {
-                    value?.hint && showHint && !enableEdit &&
-                    <div className={"popup"} onClick={(e) => { updateShowHint(e, 'popup'); stopProp(e) }}>
-                        {value?.icon && <i className="bi bi-exclamation-diamond-fill"></i> }
-                        <span className={classNames(value?.icon ? "hinttext" : "")}>
-                            {value?.hint}
-                        </span>
-                    </div>
+                    value?.hint && !value.icon && showHint && !enableEdit &&
+                    <Popup  
+                        hint={value?.hint}
+                        supportsIcon={value?.icon}
+                        updateShowHint={(e: any) => updateShowHint(e, 'popup')}
+                    />
                 }
                 {
                     enableEdit &&
@@ -140,6 +154,14 @@ const TableCell = ({cellvalue} : any) => {
                     onClick={(e) => {value?.hint ? updateShowHint(e, 'icon') : stopProp(e)}}
                 >
                     <i className="bi bi-exclamation-diamond-fill"></i>
+                    {
+                        value?.hint && showHint && !enableEdit &&
+                        <Popup  
+                            hint={value?.hint}
+                            supportsIcon={value?.icon}
+                            updateShowHint={(e: any) => updateShowHint(e, 'popup')}
+                        />
+                    }
                 </td>
                 <Cell />
             </tr>
