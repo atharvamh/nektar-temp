@@ -7,7 +7,7 @@ import "./table.sass";
 const Table = ({width = "auto", height = "auto", heading, data} : TProps) => {
     const bodyData = [...data];
     return (
-        <table className="table table-bordered table-striped" style={{ width: width, height: height}}>
+        <table className="table table-bordered" style={{ width: width, height: height}}>
             <TableHeader heading={heading}/>
             <TableBody data={bodyData} />
         </table>
@@ -16,7 +16,7 @@ const Table = ({width = "auto", height = "auto", heading, data} : TProps) => {
 
 const TableHeader = ({heading}: THProps) => {
     return (
-        <thead className="thead-light">
+        <thead className="table-dark text-center">
             <tr>
                 {
                     heading.map((item: string, index: number) => 
@@ -61,6 +61,7 @@ const TableCell = ({cellvalue} : any) => {
     const [value, setValue] = useState(cellvalue);
     const [showHint, setShowHint] = useState(false);
     const [enableEdit, setEnableEdit] = useState(false);
+    const [highlight, setHighlight] = useState(false);
 
     const enableCellEdit = () => {
         setEnableEdit(true);
@@ -93,8 +94,9 @@ const TableCell = ({cellvalue} : any) => {
         })
     } 
 
-    const updateShowHint = () => {
-        setShowHint(!showHint);
+    const updateShowHint = (e: any, ctype: string) => {
+        setShowHint(ctype === 'popup' ? false : true);
+        setHighlight(ctype === 'icon' && !showHint ? true : false);
     }
 
     const stopProp = (e: any) => {
@@ -105,13 +107,13 @@ const TableCell = ({cellvalue} : any) => {
         return (
             <td 
                 className={classNames((value?.editable && !enableEdit) ? "editable" : "", value?.hint ? "hasHint" : "", "textcell")}
-                onClick={(e) => {value?.hint ? updateShowHint() : stopProp(e)}}
+                onClick={(e) => {value?.hint ? updateShowHint(e, 'text') : stopProp(e)}}
                 onDoubleClick={(e) => {value?.editable ? enableCellEdit() : stopProp(e)}}
             >
                 {!enableEdit && value?.label}
                 {
                     value?.hint && showHint && !enableEdit &&
-                    <div className={classNames(value?.icon ? "i-popup" : "popup")}>
+                    <div className={"popup"} onClick={(e) => { updateShowHint(e, 'popup'); stopProp(e) }}>
                         {value?.icon && <i className="bi bi-exclamation-diamond-fill"></i> }
                         <span className={classNames(value?.icon ? "hinttext" : "")}>
                             {value?.hint}
@@ -131,8 +133,11 @@ const TableCell = ({cellvalue} : any) => {
         value?.icon ? 
         (
             <tr>
-                <td className={classNames(value?.editable ? "editable" : "", value?.hint ? "hasHint" : "", "iconcell")}
-                    onClick={(e) => {value?.hint ? updateShowHint() : stopProp(e)}}
+                <td className={classNames(
+                    value?.editable ? "editable" : "", 
+                    value?.hint ? "hasHint" : "", "iconcell",
+                    highlight ? "border-cstm" : "")}
+                    onClick={(e) => {value?.hint ? updateShowHint(e, 'icon') : stopProp(e)}}
                 >
                     <i className="bi bi-exclamation-diamond-fill"></i>
                 </td>

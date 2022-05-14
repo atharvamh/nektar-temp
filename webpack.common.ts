@@ -1,21 +1,21 @@
 import path from 'path';
 
 module.exports = {
-    entry: './src/index.tsx',
+    entry: path.resolve(__dirname, 'src/index.tsx'),
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js']
+    },
     module: {
         rules: [
             {
-                test: /\.(tsx)$/,
-                use: 'ts-loader',
+                test: /\.(tsx)?$/,
+                use: 'babel-loader',
                 exclude: [/node_modules/],
             }
         ]
     },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js']
-    },
     output: {
-        filename: "js/index.js",
+        filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
     },
 }

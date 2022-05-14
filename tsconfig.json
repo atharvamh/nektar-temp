@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-      "outDir": "./dist/",
+      "outDir": "./dist",
+      "rootDir": "./src",
       "noImplicitAny": true,
       "module": "esnext",
       "target": "es5",
@@ -14,6 +15,7 @@
       "isolatedModules": true,
       "skipDefaultLibCheck": true,
       "resolveJsonModule": true,
+      "esModuleInterop": true,
       "lib": [
         "DOM",
         "DOM.Iterable",
